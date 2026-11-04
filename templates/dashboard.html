@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Ruedas y Suspensiones</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f9fafb; display: flex; height: 100vh; }
+        .sidebar { width: 250px; background-color: #1f2937; color: white; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; background-color: #111827; font-size: 18px; font-weight: bold; text-align: center; color: #10b981; }
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+        .sidebar-menu li a { display: block; padding: 15px 20px; color: #9ca3af; text-decoration: none; border-bottom: 1px solid #374151; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background-color: #374151; color: white; }
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; }
+        .topbar { background: white; padding: 15px 30px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+        .content { padding: 30px; overflow-y: auto; }
+        .btn-logout { background-color: #ef4444; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-size: 14px; }
+        .btn-logout:hover { background-color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">RSV Sistema</div>
+        <ul class="sidebar-menu">
+            <li><a href="/dashboard/🏢 Proveedores" {% if module == '🏢 Proveedores' %}class="active"{% endif %}>🏢 Proveedores</a></li>
+            <li><a href="/dashboard/📦 Productos" {% if module == '📦 Productos' %}class="active"{% endif %}>📦 Productos</a></li>
+            <li><a href="/dashboard/📝 Nuevo Presupuesto" {% if module == '📝 Nuevo Presupuesto' %}class="active"{% endif %}>📝 Nuevo Presupuesto</a></li>
+            <li><a href="/dashboard/📈 Ganancias" {% if module == '📈 Ganancias' %}class="active"{% endif %}>📈 Ganancias</a></li>
+            <li><a href="/dashboard/📂 Historial" {% if module == '📂 Historial' %}class="active"{% endif %}>📂 Historial</a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="topbar">
+            <span>Usuario: <strong>{{ username }}</strong> ({{ role }})</span>
+            <a href="/logout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+        <div class="content">
+            <h1>Módulo actual: {{ module }}</h1>
+            <p>Aquí cargaremos las tablas y formularios correspondientes a este apartado de tu aplicación de precios y cotizaciones.</p>
+        </div>
+    </div>
+</body>
+</html>

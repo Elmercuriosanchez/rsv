@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Orden #{{ "%06d"|format(rev.id) }} · RSV</title>
+<meta name="theme-color" content="#00E000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   VARIABLES
+   ========================================================== */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root, html[data-theme="dark"] {
+  --bg-main: #0a0a0a;
+  --bg-gradient: radial-gradient(ellipse at top, #141414 0%, #080808 55%, #000 100%);
+  --bg-card: rgba(26, 26, 26, 0.78);
+  --bg-soft: rgba(125, 125, 125, 0.045);
+  --border: rgba(85, 85, 85, 0.35);
+  --border-soft: rgba(125, 125, 125, 0.12);
+  --txt: #f5f5f5;
+  --txt-muted: #a0a0a0;
+  --accent: #00e000;
+  --accent-2: #00a800;
+  --accent-grad: linear-gradient(135deg, #00e000 0%, #00a800 100%);
+  --danger: #ff3355;
+  --danger-soft: #ff8a9e;
+  --warning: #ffaa00;
+  --info: #60a5fa;
+  --purple: #c084fc;
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  --bg-main: #f8f8f8;
+  --bg-gradient: radial-gradient(ellipse at top, #ffffff 0%, #f0f0f0 60%, #e5e5e5 100%);
+  --bg-card: rgba(255, 255, 255, 0.94);
+  --bg-soft: rgba(0, 0, 0, 0.03);
+  --border: rgba(200, 200, 200, 0.75);
+  --border-soft: rgba(0, 0, 0, 0.08);
+  --txt: #0f172a;
+  --txt-muted: #64748b;
+  --accent: #00b800;
+  --accent-2: #008a00;
+  --accent-grad: linear-gradient(135deg, #00c800 0%, #008a00 100%);
+  --danger: #dc2626;
+  --danger-soft: #ef4444;
+  --warning: #d97706;
+  --info: #2563eb;
+  --purple: #7c3aed;
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+  color-scheme: light;
+}
+
+/* ==========================================================
+   BASE
+   ========================================================== */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--txt);
+  padding: 20px 16px 70px;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%; left: -10%;
+  width: 60%; height: 60%;
+  background: radial-gradient(circle, rgba(0, 224, 0, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  animation: float-orb 22s ease-in-out infinite;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%; right: -10%;
+  width: 60%; height: 60%;
+  background: radial-gradient(circle, rgba(0, 168, 0, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  animation: float-orb 28s ease-in-out infinite reverse;
+}
+@keyframes float-orb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(30px, -30px) scale(1.12); }
+}
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  animation: page-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================
+   BOTONES TOP
+   ========================================================== */
+.top-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: var(--accent-grad);
+  color: #001200;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 224, 0, 0.25);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.2s ease,
+              filter 0.2s ease;
+  white-space: nowrap;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 224, 0, 0.4);
+  filter: brightness(1.05);
+}
+.btn:active { transform: translateY(0) scale(0.98); }
+
+.btn-ghost {
+  background: rgba(125, 125, 125, 0.08);
+  color: var(--txt);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+.btn-ghost:hover {
+  background: rgba(0, 224, 0, 0.10);
+  border-color: rgba(0, 224, 0, 0.4);
+  color: var(--accent);
+  box-shadow: none;
+}
+.btn-wa {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+.btn-wa:hover { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5); }
+
+/* ==========================================================
+   CARD PRINCIPAL
+   ========================================================== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 18px;
+}
+
+.card-head {
+  padding: 26px 30px 22px;
+  position: relative;
+  background: linear-gradient(135deg, rgba(0, 224, 0, 0.12), rgba(0, 168, 0, 0.02));
+  border-bottom: 1px solid var(--border);
+}
+.card-head::after {
+  content: '';
+  position: absolute;
+  left: 30px;
+  bottom: -1px;
+  width: 60px;
+  height: 3px;
+  background: var(--accent-grad);
+  border-radius: 3px;
+}
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.brand-block { display: flex; align-items: center; gap: 12px; }
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 10px rgba(0, 224, 0, 0.4));
+  flex-shrink: 0;
+}
+.brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.15;
+}
+.brand-sub {
+  font-size: 11.5px;
+  color: var(--txt-muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.order-pill {
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  background: var(--accent-grad);
+  color: #001200;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgba(0, 224, 0, 0.25);
+  flex-shrink: 0;
+}
+.head-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 4px 0;
+  color: var(--txt);
+}
+.head-meta {
+  font-size: 12.5px;
+  color: var(--txt-muted);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.status-Pendiente   { background: rgba(255,170,0,0.15);  color: var(--warning); border: 1px solid rgba(255,170,0,0.4); }
+.status-Completado  { background: rgba(0,224,0,0.15);    color: var(--accent);  border: 1px solid rgba(0,224,0,0.4); }
+.status-Borrador    { background: rgba(140,155,171,0.15); color: var(--txt-muted); border: 1px solid var(--border); }
+.status-En-Proceso  { background: rgba(96,165,250,0.15); color: var(--info);    border: 1px solid rgba(96,165,250,0.4); }
+.status-Aprobado    { background: rgba(0,224,0,0.15);    color: var(--accent);  border: 1px solid rgba(0,224,0,0.4); }
+.status-Anulado     { background: rgba(255,51,85,0.15);  color: var(--danger-soft); border: 1px solid rgba(255,51,85,0.4); }
+
+/* ==========================================================
+   SECCIONES Y ACORDEONES
+   ========================================================== */
+details.data-section {
+  border-bottom: 1px solid var(--border);
+}
+details.data-section:last-child {
+  border-bottom: none;
+}
+
+/* Cabecera del acordeón (Summary) */
+details.data-section summary {
+  padding: 20px 30px;
+  cursor: pointer;
+  list-style: none; /* Oculta la flecha por defecto */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  transition: background 0.2s ease;
+}
+
+details.data-section summary::-webkit-details-marker {
+  display: none;
+}
+
+details.data-section summary:hover {
+  background: rgba(0, 224, 0, 0.04);
+}
+
+/* Flecha personalizada */
+details.data-section summary::after {
+  content: '▼';
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+details.data-section[open] summary::after {
+  transform: rotate(180deg);
+}
+
+details.data-section[open] summary {
+  border-bottom: 1px dashed var(--border-soft);
+}
+
+/* Contenido interior */
+.details-content {
+  padding: 22px 30px;
+  animation: fade-in-content 0.3s ease;
+}
+
+@keyframes fade-in-content {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px 20px;
+}
+.data-item .lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--txt-muted);
+  margin-bottom: 4px;
+}
+.data-item .val {
+  font-size: 14px;
+  font-weight: 600;
+  word-break: break-word;
+  color: var(--txt);
+}
+.data-item .val.mono {
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================
+   CHECKLIST DE RECEPCIÓN
+   ========================================================== */
+.chk-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 720px) {
+  .chk-cols { grid-template-columns: 1fr; }
+}
+.chk-block {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.chk-title {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(0, 224, 0, 0.06);
+  border-bottom: 1px solid var(--border);
+  color: var(--accent);
+}
+.chk-head-row {
+  display: grid;
+  grid-template-columns: 1fr 68px 68px;
+  padding: 8px 14px;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--txt-muted);
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--border);
+}
+html[data-theme="light"] .chk-head-row { background: rgba(0, 0, 0, 0.03); }
+.chk-row {
+  display: grid;
+  grid-template-columns: 1fr 68px 68px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--border-soft);
+  align-items: center;
+}
+.chk-row:last-child { border-bottom: none; }
+.chk-row .sys { font-weight: 500; line-height: 1.35; }
+.chk-row .cell {
+  text-align: center;
+  font-weight: 800;
+  font-size: 13px;
+  border-radius: 5px;
+  padding: 2px 6px;
+  color: var(--txt-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+}
+.chk-row .cell.ok {
+  color: var(--accent);
+  background: rgba(0, 224, 0, 0.12);
+  border: 1px solid rgba(0, 224, 0, 0.3);
+}
+.chk-row .cell.bad {
+  color: var(--danger-soft);
+  background: rgba(255, 51, 85, 0.12);
+  border: 1px solid rgba(255, 51, 85, 0.35);
+}
+
+/* ==========================================================
+   LUCES DEL TABLERO + NIVEL DE GASOLINA + TEMPERATURA
+   ========================================================== */
+.dash-block {
+  background: linear-gradient(135deg, rgba(255, 51, 85, 0.06), rgba(255, 51, 85, 0.015));
+  border: 1px solid rgba(255, 51, 85, 0.25);
+  border-radius: 12px;
+  padding: 16px 18px 18px 18px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.dash-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--danger), var(--warning));
+  opacity: 0.75;
+}
+
+.dash-active-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--danger-soft);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dash-active-label .count-pill {
+  background: rgba(255, 51, 85, 0.2);
+  color: var(--danger-soft);
+  border: 1px solid rgba(255, 51, 85, 0.5);
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+.dash-lights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.dash-light-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  background: linear-gradient(135deg, rgba(255, 51, 85, 0.22), rgba(255, 51, 85, 0.06));
+  border: 1.5px solid var(--danger);
+  border-radius: 10px;
+  color: var(--danger-soft);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  box-shadow: 0 0 0 3px rgba(255, 51, 85, 0.08);
+  animation: dash-chip-pulse 2.2s ease-in-out infinite;
+}
+.dash-light-chip .dash-light-icon {
+  font-size: 15px;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(255, 51, 85, 0.9));
+  animation: dash-chip-blink 1.5s ease-in-out infinite;
+}
+.dash-light-chip .dash-light-name {
+  min-width: 0;
+  word-break: break-word;
+}
+
+@keyframes dash-chip-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255, 51, 85, 0.08); }
+  50%      { box-shadow: 0 0 0 6px rgba(255, 51, 85, 0.18); }
+}
+@keyframes dash-chip-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+.dash-all-ok {
+  background: rgba(0, 224, 0, 0.08);
+  border: 1px solid rgba(0, 224, 0, 0.35);
+  border-radius: 10px;
+  padding: 13px 16px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ===== Nivel de Gasolina ===== */
+.fuel-block {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(255, 170, 0, 0.3);
+}
+.fuel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--txt-muted);
+  margin-bottom: 10px;
+}
+.fuel-value {
+  color: var(--warning);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 800;
+}
+.fuel-bar {
+  display: flex;
+  gap: 4px;
+  height: 14px;
+  margin-bottom: 6px;
+}
+.fuel-segment {
+  flex: 1;
+  background: rgba(125, 125, 125, 0.08);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+.fuel-segment.is-filled {
+  background: linear-gradient(180deg, #fbbf24, #f59e0b);
+  border-color: var(--warning);
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.45);
+}
+.fuel-segment.is-filled::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.12) 0,
+    rgba(255, 255, 255, 0.12) 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+.fuel-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--txt-muted);
+  letter-spacing: 0.05em;
+  padding: 0 2px;
+}
+
+/* ===== Temperatura del Motor ===== */
+.temp-block {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(96, 165, 250, 0.3);
+}
+.temp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--txt-muted);
+  margin-bottom: 10px;
+}
+.temp-value {
+  color: var(--info);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 800;
+}
+.temp-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.temp-track {
+  flex: 1;
+  height: 8px;
+  background: linear-gradient(90deg, #2c8fff 0%, #35d8c5 38%, #f6c453 67%, #ff654f 100%);
+  border-radius: 4px;
+  position: relative;
+}
+.temp-marker {
+  height: 16px;
+  width: 4px;
+  background: #fff;
+  border-radius: 2px;
+  position: absolute;
+  top: -4px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+/* ===== Light theme overrides ===== */
+html[data-theme="light"] .dash-block {
+  background: linear-gradient(135deg, rgba(255, 51, 85, 0.05), rgba(255, 51, 85, 0.012));
+}
+html[data-theme="light"] .dash-light-chip {
+  background: linear-gradient(135deg, rgba(255, 51, 85, 0.14), rgba(255, 51, 85, 0.03));
+}
+html[data-theme="light"] .fuel-segment {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================
+   REVISIÓN MECÁNICA
+   ========================================================== */
+.mrev-cat {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+.mrev-cat:last-child { margin-bottom: 0; }
+.mrev-cat-head {
+  padding: 10px 14px;
+  background: rgba(0, 224, 0, 0.06);
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mrev-item {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) 1fr;
+  padding: 9px 14px;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-soft);
+  align-items: center;
+  font-size: 12.5px;
+}
+.mrev-item:last-child { border-bottom: none; }
+.mrev-item .sys { font-weight: 600; line-height: 1.3; }
+.mrev-vars { display: flex; flex-wrap: wrap; gap: 6px; }
+.mrev-var {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(125, 125, 125, 0.06);
+  border: 1px solid var(--border);
+  color: var(--txt);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.mrev-var .sym {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 12px;
+  background: rgba(125, 125, 125, 0.08);
+  color: var(--txt-muted);
+  border: 1px solid transparent;
+}
+.mrev-var.m-star .sym {
+  background: rgba(255, 170, 0, 0.18);
+  color: var(--warning);
+  border-color: rgba(255, 170, 0, 0.4);
+}
+.mrev-var.m-ok .sym {
+  background: rgba(0, 224, 0, 0.18);
+  color: var(--accent);
+  border-color: rgba(0, 224, 0, 0.4);
+}
+.mrev-var.m-bad .sym {
+  background: rgba(255, 51, 85, 0.18);
+  color: var(--danger-soft);
+  border-color: rgba(255, 51, 85, 0.4);
+}
+.mrev-obs {
+  grid-column: 1 / -1;
+  font-size: 11.5px;
+  color: var(--txt-muted);
+  font-style: italic;
+  padding-top: 3px;
+  padding-left: 10px;
+  border-left: 2px solid rgba(0, 224, 0, 0.25);
+  margin-top: 2px;
+}
+
+/* ==========================================================
+   LEYENDA
+   ========================================================== */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 11.5px;
+  color: var(--txt-muted);
+  margin-top: 14px;
+  align-items: center;
+}
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend .sym {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+.legend .star { background: rgba(255, 170, 0, 0.18); color: var(--warning); border-color: rgba(255, 170, 0, 0.4); }
+.legend .ok   { background: rgba(0, 224, 0, 0.18);   color: var(--accent);  border-color: rgba(0, 224, 0, 0.4); }
+.legend .bad  { background: rgba(255, 51, 85, 0.18); color: var(--danger-soft); border-color: rgba(255, 51, 85, 0.4); }
+
+/* ==========================================================
+   OBSERVACIONES
+   ========================================================== */
+.obs-box {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: var(--txt);
+  word-break: break-word;
+}
+.obs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: fallas;
+}
+.obs-list li {
+  padding: 6px 0 6px 32px;
+  border-bottom: 1px dashed var(--border-soft);
+  font-size: 13px;
+  position: relative;
+  line-height: 1.5;
+}
+.obs-list li:last-child { border-bottom: none; }
+.obs-list li::before {
+  counter-increment: fallas;
+  content: counter(fallas) ".";
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  font-weight: 800;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+/* ==========================================================
+   FOTOS
+   ========================================================== */
+.photo-count-badge {
+  background: var(--accent);
+  color: #001200;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================
+   LEGADO
+   ========================================================== */
+.legacy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.legacy-table th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--txt-muted);
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.12);
+}
+html[data-theme="light"] .legacy-table th { background: rgba(0, 0, 0, 0.03); }
+.legacy-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--txt);
+}
+.legacy-table tr:last-child td { border-bottom: none; }
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+.footer-note {
+  text-align: center;
+  padding: 22px 20px 24px;
+  font-size: 11.5px;
+  color: var(--txt-muted);
+  border-top: 1px solid var(--border);
+  line-height: 1.7;
+}
+.footer-note b { color: var(--txt); font-weight: 700; }
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+@media (max-width: 640px) {
+  body { padding: 14px 10px 60px; }
+  .card-head, details.data-section summary, .details-content { padding-left: 18px; padding-right: 18px; }
+  .card-head { padding-top: 22px; padding-bottom: 18px; }
+  details.data-section summary { padding-top: 16px; padding-bottom: 16px; }
+  .details-content { padding-bottom: 18px; }
+  .head-title { font-size: 18px; }
+  .order-pill { font-size: 12px; padding: 5px 11px; }
+  .brand-name { font-size: 15px; }
+  .brand-sub { font-size: 10.5px; }
+  .brand-logo { width: 34px; height: 34px; }
+  .data-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px 14px; }
+  .chk-row, .chk-head-row { grid-template-columns: 1fr 54px 54px; padding: 7px 10px; font-size: 11.5px; }
+  .chk-row .cell { font-size: 12px; }
+  .mrev-item { grid-template-columns: 1fr; gap: 6px; padding: 10px 12px; }
+  .top-actions { justify-content: stretch; gap: 8px; }
+  .btn { flex: 1; padding: 11px 12px; font-size: 12.5px; }
+  .btn-ghost.wide { flex: 0 0 auto; padding: 11px 14px; }
+  .legend { font-size: 11px; gap: 10px; }
+
+  .dash-lights-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-light-chip  { padding: 8px 10px; font-size: 11.5px; }
+  .dash-block       { padding: 14px 14px 16px 14px; }
+}
+@media (max-width: 420px) {
+  .dash-lights-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================
+   PRINT (Forzar apertura de acordeones al imprimir)
+   ========================================================== */
+@media print {
+  body { background: #fff !important; color: #000 !important; padding: 0; }
+  body::before, body::after { display: none !important; }
+  .top-actions { display: none !important; }
+  .card {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: 1px solid #ccc !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+  .card-head { background: #f5f5f5 !important; }
+  .card-head::after { background: #0a0a0a !important; }
+  .brand-name, .order-pill {
+    -webkit-text-fill-color: initial !important;
+    background: none !important;
+    color: #000 !important;
+  }
+
+  /* Forzar que todos los details se abran al imprimir */
+  details.data-section { display: block !important; page-break-inside: avoid; border-bottom: none; margin-bottom: 20px; }
+  details.data-section > summary { display: none !important; } /* Ocultar el botón de la pestaña */
+  .details-content { display: block !important; padding: 0 !important; }
+
+  .mrev-cat, .chk-block { page-break-inside: avoid; }
+
+  .dash-block {
+    background: #fff !important;
+    border: 1px solid #c00 !important;
+  }
+  .dash-block::before { background: #c00 !important; }
+  .dash-light-chip {
+    background: #fff !important;
+    border: 1px solid #c00 !important;
+    color: #c00 !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  .dash-light-chip .dash-light-icon {
+    filter: none !important;
+    animation: none !important;
+  }
+  .fuel-segment.is-filled {
+    background: #d97706 !important;
+    box-shadow: none !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============================================================
+       BOTONES SUPERIORES
+       ============================================================ -->
+  <div class="top-actions">
+    <button type="button" class="btn btn-ghost wide" onclick="toggleTheme()" id="themeBtn" title="Cambiar tema">☀️</button>
+    <button type="button" class="btn btn-ghost wide" onclick="window.print()" title="Imprimir / Guardar PDF">🖨️ Imprimir</button>
+    {% if rev.client_phone %}
+      {% set tipo_doc = 'la planilla de inspección' if has_reception else ('la revisión técnica' if has_mechanic else 'la orden de revisión') %}
+      {% set wa_msg %}Hola {{ rev.client_name }}, le compartimos {{ tipo_doc }} de su vehículo en *Ruedas y Suspensiones* 🚗
+
+📋 Orden #{{ "%06d"|format(rev.id) }}
+🚘 {{ rev.vehicle_brand or '' }} {{ rev.vehicle_model or '' }} {{ rev.vehicle_year or '' }}{% if rev.vehicle_plate %} ({{ rev.vehicle_plate }}){% endif %}
+📅 {{ rev.date }}
+
+🔗 Ver online:
+{{ request.url }}
+
+¡Gracias por su preferencia!{% endset %}
+      <a class="btn btn-wa" style="flex:1;"
+         href="https://wa.me/{{ wa_normalize_phone(rev.client_phone) }}?text={{ wa_msg|trim|urlencode }}"
+         target="_blank" rel="noopener"
+         title="Compartir por WhatsApp">📱 Enviar por WhatsApp</a>
+    {% endif %}
+  </div>
+
+  <!-- ============================================================
+       CARD PRINCIPAL
+       ============================================================ -->
+  <div class="card">
+
+    <!-- ===== HEADER ===== -->
+    <div class="card-head">
+      <div class="brand-row">
+        <div class="brand-block">
+          <img src="/icon-192.png" alt="RSV" class="brand-logo" onerror="this.style.display='none'">
+          <div>
+            <div class="brand-name">RUEDAS Y SUSPENSIONES</div>
+            <div class="brand-sub">RIF: J-40083124-5 · Av. Bolívar Norte, Valencia Edo. Carabobo</div>
+          </div>
+        </div>
+        <span class="order-pill">N° {{ "%06d"|format(rev.id) }}</span>
+      </div>
+
+      <div class="head-title">
+        {% if has_reception and has_mechanic %}📋🔬 Recepción + Revisión Técnica
+        {% elif has_reception %}📋 Planilla de Inspección
+        {% elif has_mechanic %}🔬 Orden de Revisión Técnica
+        {% else %}📄 Orden de Revisión{% endif %}
+      </div>
+
+      <div class="head-meta">
+        <span>📅 {{ rev.date }}</span>
+        {% if has_mechanic and rev.mechanic_status %}
+          <span class="status-badge status-{{ rev.mechanic_status|replace(' ', '-') }}">{{ rev.mechanic_status }}</span>
+        {% elif has_reception and rev.reception_status %}
+          <span class="status-badge status-{{ rev.reception_status }}">{{ rev.reception_status }}</span>
+        {% elif rev.status %}
+          <span class="status-badge status-{{ rev.status }}">{{ rev.status }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ===== CLIENTE (ABIERTO POR DEFECTO) ===== -->
+    <details class="data-section" open>
+      <summary>👤 Datos del Cliente</summary>
+      <div class="details-content">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="lbl">Nombre completo</div>
+            <div class="val">{{ rev.client_name or '—' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="lbl">Cédula / RIF</div>
+            <div class="val mono">{{ rev.client_doc or '—' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="lbl">Teléfono</div>
+            <div class="val">{{ rev.client_phone or '—' }}</div>
+          </div>
+          {% if has_reception and rev.reception_email %}
+          <div class="data-item">
+            <div class="lbl">Email</div>
+            <div class="val">{{ rev.reception_email }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </details>
+
+    <!-- ===== VEHÍCULO (ABIERTO POR DEFECTO) ===== -->
+    <details class="data-section" open>
+      <summary>🚗 Datos del Vehículo</summary>
+      <div class="details-content">
+        <div class="data-grid">
+          <div class="data-item">
+            <div class="lbl">Marca</div>
+            <div class="val">{{ rev.vehicle_brand or '—' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="lbl">Modelo</div>
+            <div class="val">{{ rev.vehicle_model or '—' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="lbl">Año</div>
+            <div class="val">{{ rev.vehicle_year or '—' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="lbl">Color</div>
+            <div class="val">{{ rev.vehicle_color or '—' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="lbl">Placa</div>
+            <div class="val mono">{{ rev.vehicle_plate or '—' }}</div>
+          </div>
+          <div class="data-item">
+            <div class="lbl">Kilometraje</div>
+            <div class="val">{{ rev.vehicle_km or '—' }}</div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ===== CHECKLIST DE RECEPCIÓN (CERRADO) ===== -->
+    {% if has_reception %}
+      <details class="data-section">
+        <summary>🔍 Checklist de Inspección</summary>
+        <div class="details-content">
+          <div class="chk-cols">
+            {% for col in reception_columns %}
+              <div class="chk-block">
+                <div class="chk-title">{{ col.icon }} {{ col.title }}</div>
+
+                {% for it in col['items'] %}
+                  <div class="chk-row" style="grid-template-columns: 1fr auto; padding: 10px 14px;">
+                    <div class="sys" style="font-weight:600;">{{ it.name }}</div>
+                    <div style="display: flex; gap: 12px;">
+                      {% for f in it.fields %}
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                          {% if f.label %}
+                            <span style="font-size: 9px; color: var(--txt-muted); text-transform: uppercase; font-weight: 700;">{{ f.label }}</span>
+                          {% endif %}
+                          <div class="cell {% if f.mark == 'BUENO' %}ok{% elif f.mark == 'MALO' %}bad{% endif %}"
+                               style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: 800; font-size: 14px;">
+                            {% if f.mark == 'BUENO' %}✓{% elif f.mark == 'MALO' %}✕{% else %}·{% endif %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+
+              </div>
+            {% endfor %}
+          </div>
+
+          {% set fallas_validas = [] %}
+          {% for f in fallas %}{% if f and f.strip() %}{% set _ = fallas_validas.append(f) %}{% endif %}{% endfor %}
+          {% if fallas_validas %}
+            <div style="margin-top: 20px;">
+              <div class="section-label">📝 Observaciones / Fallas Declaradas</div>
+              <ul class="obs-list">
+                {% for f in fallas_validas %}
+                  <li>{{ f }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+      </details>
+    {% endif %}
+
+    <!-- ===== LUCES DEL TABLERO + GASOLINA + TEMPERATURA (CERRADO) ===== -->
+    {% set _lights_on = reception_lights_on_render|default([]) %}
+    {% set _fuel_lvl  = reception_fuel_level|default('') %}
+    {% set _fuel_opts = fuel_level_options|default(['Vacío (E)', '1/4', '1/2', '3/4', 'Lleno (F)']) %}
+    {% set _temp = rev['reception_temperature'] if 'reception_temperature' in rev.keys() else '' %}
+
+    {% if _lights_on or _fuel_lvl or _temp %}
+      <details class="data-section">
+        <summary>🚨 Luces, Gasolina y Temperatura</summary>
+        <div class="details-content">
+          <div class="dash-block">
+            {# ----- Luces de alerta ----- #}
+            {% if _lights_on %}
+              <div class="dash-active-label">
+                ⚠️ Alertas activas
+                <span class="count-pill">{{ _lights_on|length }}</span>
+              </div>
+              <div class="dash-lights-grid">
+                {% for light in _lights_on %}
+                  <div class="dash-light-chip">
+                    <span class="dash-light-icon">💡</span>
+                    <span class="dash-light-name">{{ light }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="dash-all-ok">
+                <span>✅</span>
+                <span>Ninguna luz de alerta encendida en el tablero</span>
+              </div>
+            {% endif %}
+
+            {# ----- Nivel de gasolina ----- #}
+            {% if _fuel_lvl %}
+              {% set _idx = _fuel_opts.index(_fuel_lvl) if _fuel_lvl in _fuel_opts else -1 %}
+              <div class="fuel-block">
+                <div class="fuel-header">
+                  <span>⛽ Nivel de Gasolina</span>
+                  <span class="fuel-value">{{ _fuel_lvl }}</span>
+                </div>
+                <div class="fuel-bar">
+                  {% for opt in _fuel_opts %}
+                    <div class="fuel-segment {% if _idx >= 0 and loop.index0 <= _idx %}is-filled{% endif %}"></div>
+                  {% endfor %}
+                </div>
+                <div class="fuel-scale">
+                  <span>E</span><span>1/4</span><span>1/2</span><span>3/4</span><span>F</span>
+                </div>
+              </div>
+            {% endif %}
+
+            {# ----- Temperatura del motor ----- #}
+            {% if _temp %}
+              {% set temp_val = _temp|float %}
+              {% set temp_pct = ((temp_val + 40) / 190) * 100 %}
+              {% if temp_pct < 0 %}{% set temp_pct = 0 %}{% endif %}
+              {% if temp_pct > 100 %}{% set temp_pct = 100 %}{% endif %}
+              <div class="temp-block">
+                <div class="temp-header">
+                  <span>🌡️ Temperatura del Motor</span>
+                  <span class="temp-value">{{ temp_val }} °C</span>
+                </div>
+                <div class="temp-bar-container">
+                  <div class="temp-track">
+                    <div class="temp-marker" style="left: {{ temp_pct }}%;"></div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </details>
+    {% endif %}
+
+    <!-- ===== REVISIÓN MECÁNICA (CERRADO) ===== -->
+    {% if has_mechanic %}
+      <details class="data-section">
+        <summary>🔬 Revisión Técnica por Categorías</summary>
+        <div class="details-content">
+          {% for cat in mechanic_categories %}
+            <div class="mrev-cat">
+              <div class="mrev-cat-head">{{ cat.icon }} {{ cat.name }}</div>
+              {% for comp in cat.components %}
+                <div class="mrev-item">
+                  <div class="sys">{{ comp.system }}</div>
+                  <div class="mrev-vars">
+                    {% for v in comp.variants %}
+                      {% set cls = '' %}
+                      {% if v.mark == '*' %}{% set cls = 'm-star' %}
+                      {% elif v.mark == '✓' %}{% set cls = 'm-ok' %}
+                      {% elif v.mark == 'X' %}{% set cls = 'm-bad' %}{% endif %}
+                      <span class="mrev-var {{ cls }}">
+                        {% if v.label %}<span>{{ v.label }}</span>{% endif %}
+                        <span class="sym">{% if v.mark == '*' %}✱{% elif v.mark == '✓' %}✓{% elif v.mark == 'X' %}✕{% else %}·{% endif %}</span>
+                      </span>
+                    {% endfor %}
+                  </div>
+                  {% if comp.obs %}
+                    <div class="mrev-obs">Obs: {{ comp.obs }}</div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+
+          <div class="legend">
+            <span><span class="sym star">✱</span> Desgaste parcial, reparable</span>
+            <span><span class="sym ok">✓</span> Buen estado</span>
+            <span><span class="sym bad">✕</span> Mal estado, reemplazo</span>
+          </div>
+        </div>
+      </details>
+
+      {% if rev.mechanic_notes %}
+        <details class="data-section">
+          <summary>📝 Observaciones Generales del Mecánico</summary>
+          <div class="details-content">
+            <div class="obs-box">{{ rev.mechanic_notes }}</div>
+          </div>
+        </details>
+      {% endif %}
+    {% endif %}
+
+    <!-- ===== BOCETO DE DAÑOS (CERRADO) ===== -->
+    {% if reception_sketch %}
+      {% set ns_sk = namespace(count=0) %}
+      {% for k, v in reception_sketch.items() %}
+        {% if k != 'drawing' %}
+          {% set d = (v.d if v is mapping else v) %}
+          {% if d in ('rayon','golpe','falta','otro') %}{% set ns_sk.count = ns_sk.count + 1 %}{% endif %}
+        {% endif %}
+      {% endfor %}
+      {% set tiene_dibujo = reception_sketch.get('drawing') %}
+      {% if ns_sk.count > 0 or tiene_dibujo %}
+        <details class="data-section">
+          <summary>🚗 Boceto de Daños
+            {% if ns_sk.count > 0 %}<span class="photo-count-badge">{{ ns_sk.count }}</span>{% endif %}
+          </summary>
+          <div class="details-content">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;" class="sketch-preview-layout">
+              <div style="background:var(--bg-soft);border-radius:12px;padding:16px;display:flex;justify-content:center;">
+                <div style="position:relative;max-width:640px;width:100%;aspect-ratio:800/620;">
+<svg viewBox="0 0 800 620" style="position:absolute;inset:0;width:100%;height:100%;display:block;">
+    <defs>
+        <linearGradient id="pcarBodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2a3441"/>
+            <stop offset="100%" stop-color="#141a22"/>
+        </linearGradient>
+        <linearGradient id="pcarGlassGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#425e7c"/>
+            <stop offset="100%" stop-color="#243b52"/>
+        </linearGradient>
+        <radialGradient id="pcarWheelGrad">
+            <stop offset="0%" stop-color="#3a4552"/>
+            <stop offset="70%" stop-color="#1a1f28"/>
+            <stop offset="100%" stop-color="#0a0d11"/>
+        </radialGradient>
+    </defs>
+
+    <ellipse cx="235" cy="160" rx="78" ry="98" fill="url(#pcarWheelGrad)" stroke="#5a6572" stroke-width="1.5"/>
+    <ellipse cx="235" cy="160" rx="42" ry="55" fill="#0d1116" stroke="#3a4552" stroke-width="1"/>
+    <ellipse cx="565" cy="160" rx="78" ry="98" fill="url(#pcarWheelGrad)" stroke="#5a6572" stroke-width="1.5"/>
+    <ellipse cx="565" cy="160" rx="42" ry="55" fill="#0d1116" stroke="#3a4552" stroke-width="1"/>
+    <ellipse cx="235" cy="500" rx="78" ry="98" fill="url(#pcarWheelGrad)" stroke="#5a6572" stroke-width="1.5"/>
+    <ellipse cx="235" cy="500" rx="42" ry="55" fill="#0d1116" stroke="#3a4552" stroke-width="1"/>
+    <ellipse cx="565" cy="500" rx="78" ry="98" fill="url(#pcarWheelGrad)" stroke="#5a6572" stroke-width="1.5"/>
+    <ellipse cx="565" cy="500" rx="42" ry="55" fill="#0d1116" stroke="#3a4552" stroke-width="1"/>
+
+    <path d="M 400 30 Q 460 30 480 50 Q 500 70 500 105 L 500 180 Q 500 210 500 245 L 500 400 Q 500 435 500 470 L 500 515 Q 500 555 480 575 Q 460 595 400 595 Q 340 595 320 575 Q 300 555 300 515 L 300 470 Q 300 435 300 400 L 300 245 Q 300 210 300 180 L 300 105 Q 300 70 320 50 Q 340 30 400 30 Z"
+          fill="url(#pcarBodyGrad)" stroke="#5a6572" stroke-width="2"/>
+
+    <path d="M 305 105 Q 400 95 495 105" fill="none" stroke="#3a4552" stroke-width="1" pointer-events="none"/>
+    <path d="M 305 515 Q 400 525 495 515" fill="none" stroke="#3a4552" stroke-width="1" pointer-events="none"/>
+
+    {% macro zone_path(zone_id, path_d, label, tx, ty, cls_lbl) %}
+      {% set v = reception_sketch.get(zone_id) %}
+      {% set dmg = (v.d if v is mapping else v) if v else '' %}
+      {% set cls = ('dmg-' + dmg) if dmg in ('rayon','golpe','falta','otro') else '' %}
+      <path d="{{ path_d }}" class="car-zone-readonly {{ cls }}"/>
+      <text x="{{ tx }}" y="{{ ty }}" class="car-sketch-label-preview {{ cls_lbl|default('') }}">{{ label }}</text>
+    {% endmacro %}
+
+    {{ zone_path('frente',   'M 300 105 Q 300 65 320 48 Q 340 32 400 32 Q 460 32 480 48 Q 500 65 500 105 L 500 115 L 300 115 Z', 'FRENTE', 400, 82, '') }}
+    {{ zone_path('capo',     'M 300 115 L 500 115 L 500 180 L 300 180 Z', 'CAPÓ', 400, 152, '') }}
+    {{ zone_path('techo',    'M 300 220 L 500 220 L 500 400 L 300 400 Z', 'TECHO', 400, 315, '') }}
+    {{ zone_path('maletero', 'M 300 440 L 500 440 L 500 515 L 300 515 Z', 'MALETERO', 400, 482, '') }}
+    {{ zone_path('atras',    'M 300 515 L 500 515 L 500 555 Q 500 590 400 590 Q 300 590 300 555 Z', 'ATRÁS', 400, 560, '') }}
+    {{ zone_path('pdi',      'M 300 185 L 80 185 Q 65 185 65 200 L 65 285 Q 65 300 80 300 L 300 300 Z', 'PUERTA DEL. IZQ.', 185, 285, 'sm') }}
+    {{ zone_path('pti',      'M 300 310 L 80 310 Q 65 310 65 325 L 65 410 Q 65 425 80 425 L 300 425 Z', 'PUERTA TRA. IZQ.', 185, 410, 'sm') }}
+    {{ zone_path('pdd',      'M 500 185 L 720 185 Q 735 185 735 200 L 735 285 Q 735 300 720 300 L 500 300 Z', 'PUERTA DEL. DER.', 615, 285, 'sm') }}
+    {{ zone_path('ptd',      'M 500 310 L 720 310 Q 735 310 735 325 L 735 410 Q 735 425 720 425 L 500 425 Z', 'PUERTA TRA. DER.', 615, 410, 'sm') }}
+
+    {# Parabrisas y medallón decorativos #}
+    <path d="M 305 180 Q 400 172 495 180 L 490 220 Q 400 212 310 220 Z"
+          fill="url(#pcarGlassGrad)" opacity="0.75" pointer-events="none"/>
+    <path d="M 310 400 Q 400 408 490 400 L 495 440 Q 400 432 305 440 Z"
+          fill="url(#pcarGlassGrad)" opacity="0.65" pointer-events="none"/>
+
+    {# Faros #}
+    <ellipse cx="330" cy="55" rx="18" ry="8" fill="#a8b6c4" opacity="0.4" pointer-events="none"/>
+    <ellipse cx="470" cy="55" rx="18" ry="8" fill="#a8b6c4" opacity="0.4" pointer-events="none"/>
+    <ellipse cx="330" cy="570" rx="18" ry="7" fill="#ff3355" opacity="0.4" pointer-events="none"/>
+    <ellipse cx="470" cy="570" rx="18" ry="7" fill="#ff3355" opacity="0.4" pointer-events="none"/>
+</svg>
+
+                {% if tiene_dibujo %}
+                  <img src="{{ tiene_dibujo }}" alt="Dibujo libre"
+                       style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;">
+                {% endif %}
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--txt-muted);margin-bottom:10px;">
+                  {% if ns_sk.count > 0 %}Zonas afectadas{% else %}Dibujo libre{% endif %}
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  {% set zone_names = {'frente':'Frente','capo':'Capó','pdi':'Puerta Delantera Izq.','pti':'Puerta Trasera Izq.','pdd':'Puerta Delantera Der.','ptd':'Puerta Trasera Der.','techo':'Techo','maletero':'Maletero','atras':'Atrás'} %}
+                  {% set dmg_names = {'rayon':'Rayón','golpe':'Golpe','falta':'Falta','otro':'Otro'} %}
+                  {% set dmg_colors = {'rayon':'#ff3355','golpe':'#ffaa00','falta':'#c084fc','otro':'#60a5fa'} %}
+                  {% for k, v in reception_sketch.items() %}
+                    {% if k != 'drawing' %}
+                      {% set d = (v.d if v is mapping else v) %}
+                      {% if d in ('rayon','golpe','falta','otro') %}
+                        <div style="background:var(--bg-soft);border-left:4px solid {{ dmg_colors[d] }};border-radius:8px;padding:10px 14px;font-size:12.5px;">
+                          <b style="color:var(--txt);">{{ zone_names.get(k, k) }}</b>
+                          <span style="color:{{ dmg_colors[d] }};font-weight:700;margin-left:8px;">{{ dmg_names[d] }}</span>
+                          {% if v is mapping and v.n %}<div style="color:var(--txt-muted);font-size:11.5px;margin-top:3px;font-style:italic;">{{ v.n }}</div>{% endif %}
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if tiene_dibujo %}
+                    <div style="background:var(--bg-soft);border-left:4px solid var(--accent);border-radius:8px;padding:10px 14px;font-size:12.5px;">
+                      ✏️ <b style="color:var(--txt);">Dibujo libre adjunto</b>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <style>
+          .car-zone-readonly {
+            fill: rgba(60, 75, 90, 0.25);
+            stroke: #3a4552;
+            stroke-width: 1;
+          }
+          .car-zone-readonly.dmg-rayon  { fill: rgba(255, 51, 85, 0.55);  stroke: #ff3355; stroke-width: 2; }
+          .car-zone-readonly.dmg-golpe  { fill: rgba(255, 170, 0, 0.55);  stroke: #ffaa00; stroke-width: 2; }
+          .car-zone-readonly.dmg-falta  { fill: rgba(192, 132, 252, 0.55); stroke: #c084fc; stroke-width: 2; }
+          .car-zone-readonly.dmg-otro   { fill: rgba(96, 165, 250, 0.55); stroke: #60a5fa; stroke-width: 2; }
+          .car-sketch-label-preview {
+            font-size: 12px;
+            font-weight: 800;
+            fill: #8a96a6;
+            text-anchor: middle;
+            pointer-events: none;
+            letter-spacing: 0.06em;
+          }
+          .car-sketch-label-preview.xs {
+            font-size: 7px;
+            letter-spacing: 0.02em;
+          }
+          .car-sketch-label-preview.sm {
+            font-size: 9px;
+            letter-spacing: 0.03em;
+          }
+          @media (max-width: 720px) {
+            .sketch-preview-layout {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        </style>
+      {% endif %}
+    {% endif %}
+
+    <!-- ===== FOTOS DEL VEHÍCULO (CERRADO) ===== -->
+    {% if reception_photos %}
+      <details class="data-section">
+        <summary>📸 Fotos del Vehículo
+          <span class="photo-count-badge">{{ reception_photos|length }}</span>
+        </summary>
+        <div class="details-content">
+          <div id="photoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">
+            {% for p in reception_photos %}
+              <div class="photo-item" data-url="{{ p.filename }}"
+                   style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:rgba(0,0,0,0.25);aspect-ratio:1;cursor:zoom-in;transition:transform 0.2s ease;">
+                <img src="{{ p.filename }}" alt="{{ p.original_name }}" loading="lazy"
+                     style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;">
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </details>
+    {% endif %}
+
+    <!-- ===== LEGADO (CERRADO) ===== -->
+    {% if not has_reception and not has_mechanic and legacy_items %}
+      <details class="data-section">
+        <summary>🔍 Checklist</summary>
+        <div class="details-content">
+          <table class="legacy-table">
+            <thead>
+              <tr>
+                <th>Sistema / Componente</th>
+                <th>Estado</th>
+                <th>Observación</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for it in legacy_items %}
+                <tr>
+                  <td>{{ it.system or '—' }}</td>
+                  <td>{{ it.status or '—' }}</td>
+                  <td>{{ it.obs or '—' }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </details>
+    {% endif %}
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer-note">
+      Documento generado electrónicamente por <b>Ruedas y Suspensiones</b><br>
+      Para consultas: (0241) 825.60.24 · ruedasysuspensionesgroup@hotmail.com<br>
+      <span style="opacity:0.65; font-size:10.5px;">Link válido mientras la orden esté activa · Generado {{ rev.date }}</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     LIGHTBOX (oculto por defecto)
+     ============================================================ -->
+<div id="photoLightbox" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px;">
+    <button type="button" id="photoLightboxClose"
+            style="position:absolute;top:20px;right:20px;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.25);font-size:22px;font-weight:300;cursor:pointer;padding:0;line-height:1;">✕</button>
+    <button type="button" id="photoLightboxPrev"
+            style="position:absolute;left:20px;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.25);font-size:26px;font-weight:300;cursor:pointer;padding:0;line-height:1;display:none;">‹</button>
+    <button type="button" id="photoLightboxNext"
+            style="position:absolute;right:20px;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.25);font-size:26px;font-weight:300;cursor:pointer;padding:0;line-height:1;display:none;">›</button>
+    <div id="photoLightboxCounter"
+         style="position:absolute;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;display:none;"></div>
+    <img id="photoLightboxImg" src="" alt=""
+         style="max-width:95vw;max-height:90vh;object-fit:contain;border-radius:12px;box-shadow:0 30px 90px rgba(0,0,0,0.9);display:block;">
+</div>
+
+<script>
+  /* ==========================================================
+     TEMA CLARO / OSCURO
+     ========================================================== */
+  (function initTheme() {
+    var saved = localStorage.getItem('rsv_public_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeBtn(saved);
+  })();
+
+  function updateThemeBtn(t) {
+    var b = document.getElementById('themeBtn');
+    if (b) b.textContent = (t === 'dark') ? '☀️' : '🌙';
+  }
+
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = (cur === 'dark') ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('rsv_public_theme', next);
+    updateThemeBtn(next);
+  }
+
+  /* ==========================================================
+     AUTO-DETECCIÓN DEL TEMA
+     ========================================================== */
+  (function autoDetectSystemTheme() {
+    if (localStorage.getItem('rsv_public_theme')) return;
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      document.documentElement.setAttribute('data-theme', 'light');
+      updateThemeBtn('light');
+    }
+  })();
+
+  /* ==========================================================
+     LIGHTBOX DE FOTOS
+     ========================================================== */
+  (function() {
+    'use strict';
+
+    var photos = [];
+    var currentIdx = 0;
+    var lightbox = document.getElementById('photoLightbox');
+    var imgEl = document.getElementById('photoLightboxImg');
+    var counterEl = document.getElementById('photoLightboxCounter');
+    var prevBtn = document.getElementById('photoLightboxPrev');
+    var nextBtn = document.getElementById('photoLightboxNext');
+    var closeBtn = document.getElementById('photoLightboxClose');
+    var grid = document.getElementById('photoGrid');
+
+    console.log('[Lightbox] init. lightbox:', !!lightbox, 'grid:', !!grid);
+
+    if (!lightbox || !imgEl || !grid) {
+        console.warn('[Lightbox] Faltan elementos críticos. Abortando.');
+        return;
+    }
+
+    var items = grid.querySelectorAll('.photo-item');
+    console.log('[Lightbox] Encontradas', items.length, 'fotos.');
+
+    Array.prototype.forEach.call(items, function(item, i) {
+        photos.push(item.getAttribute('data-url'));
+        item.setAttribute('data-index', i);
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('[Lightbox] Click en foto', i);
+            openLB(i);
+        });
+    });
+
+    function openLB(idx) {
+        currentIdx = idx;
+        imgEl.src = photos[currentIdx];
+        imgEl.alt = 'Foto ' + (currentIdx + 1);
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        updateNav();
+    }
+
+    function closeLB() {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = '';
+        imgEl.src = '';
+    }
+
+    function updateNav() {
+        if (photos.length > 1) {
+            prevBtn.style.display = 'flex';
+            nextBtn.style.display = 'flex';
+            counterEl.style.display = 'block';
+            counterEl.textContent = (currentIdx + 1) + ' / ' + photos.length;
+        } else {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            counterEl.style.display = 'none';
+        }
+    }
+
+    function nav(dir) {
+        if (photos.length <= 1) return;
+        currentIdx = (currentIdx + dir + photos.length) % photos.length;
+        imgEl.src = photos[currentIdx];
+        imgEl.alt = 'Foto ' + (currentIdx + 1);
+        updateNav();
+    }
+
+    closeBtn.addEventListener('click', function(e) { e.stopPropagation(); closeLB(); });
+    prevBtn.addEventListener('click', function(e) { e.stopPropagation(); nav(-1); });
+    nextBtn.addEventListener('click', function(e) { e.stopPropagation(); nav(1); });
+
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) closeLB();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (lightbox.style.display !== 'flex') return;
+        if (e.key === 'Escape') closeLB();
+        else if (e.key === 'ArrowLeft') nav(-1);
+        else if (e.key === 'ArrowRight') nav(1);
+    });
+
+    /* Swipe en móvil */
+    var touchStartX = 0;
+    var touchStartY = 0;
+    document.addEventListener('touchstart', function(e) {
+        if (lightbox.style.display !== 'flex') return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    document.addEventListener('touchend', function(e) {
+        if (lightbox.style.display !== 'flex') return;
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        var dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+            nav(dx < 0 ? 1 : -1);
+        } else if (dy > 100 && Math.abs(dx) < 60) {
+            closeLB();
+        }
+    }, { passive: true });
+
+    console.log('[Lightbox] Listo.');
+  })();
+</script>
+</body>
+</html>

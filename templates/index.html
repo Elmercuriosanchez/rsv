@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora RSV - ERP</title>
+    <style>
+        body { background: #0f172a; color: #f8fafc; font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 260px; background: #1e293b; border-right: 1px solid #334155; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .sidebar h2 { font-size: 18px; color: #38bdf8; margin-top: 0; margin-bottom: 15px; }
+        .user-info { font-size: 14px; margin-bottom: 5px; color: #cbd5e1; }
+        .nav-links { list-style: none; padding: 0; margin: 20px 0; }
+        .nav-links li { padding: 8px 0; border-bottom: 1px solid #334155; }
+        .nav-links a { color: #f8fafc; text-decoration: none; display: block; }
+        .nav-links a:hover { color: #38bdf8; }
+        .logout-btn { background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 8px; border-radius: 5px; cursor: pointer; text-align: center; text-decoration: none; font-weight: bold; display: block; margin-bottom: 20px; }
+        .logout-btn:hover { background: #ef4444; color: white; }
+        .tasas-box { background: #0f172a; border: 1px solid #334155; padding: 15px; border-radius: 8px; margin-top: auto; }
+        .tasas-box h3 { font-size: 14px; margin-top: 0; color: #38bdf8; }
+        .tasas-box label { font-size: 12px; display: block; margin-top: 8px; }
+        .tasas-box input { width: 100%; padding: 6px; margin-top: 3px; background: #1e293b; border: 1px solid #475569; color: white; border-radius: 4px; box-sizing: border-box; }
+        .btn-guardar { width: 100%; padding: 8px; background: #10b981; color: white; border: none; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .btn-api { width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 4px; font-weight: bold; margin-top: 5px; cursor: pointer; }
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e293b; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; font-size: 14px; }
+        th { background: #334155; color: #38bdf8; }
+        input[type="text"], input[type="number"], select { padding: 10px; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 5px; width: 100%; box-sizing: border-box; margin-bottom: 15px; }
+        button.btn-primary { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button.btn-primary:hover { background: #059669; }
+        .flash { padding: 10px; border-radius: 5px; margin-bottom: 15px; background: #065f46; color: #d1fae5; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>⚙️ Calculadora RSV</h2>
+        <div class="user-info">👤 Usuario: <strong>{{ session.get('username') }}</strong></div>
+        <div class="user-info" style="margin-bottom: 15px;">🛡️ Rol: <strong>{{ session.get('role') }}</strong></div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">🚪 Cerrar Sesión</a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('proveedores') }}">📦 Proveedores</a></li>
+            <li><a href="{{ url_for('productos') }}">📋 Productos</a></li>
+            <li><a href="{{ url_for('presupuesto') }}">📝 Nuevo Presupuesto</a></li>
+            <li><a href="{{ url_for('ganancias') }}">📈 Ganancias</a></li>
+            <li><a href="{{ url_for('historial') }}">📂 Historial</a></li>
+            {% if session.get('role') == 'Administrador' %}
+                <li><a href="{{ url_for('usuarios') }}">👥 Usuarios</a></li>
+            {% endif %}
+        </ul>
+        <div class="tasas-box">
+            <h3>💱 Ajuste de Tasas BCV</h3>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for cat, msg in messages %}
+                        {% if cat != 'success' and cat != 'danger' %}{% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form method="POST" action="{{ url_for('actualizar_tasas') }}">
+                <label>Tasa USD (Bs.):</label>
+                <input type="text" name="tasa_usd" value="{{ '%.2f'|format(session.get('tasa_usd', 0.0)) }}">
+                <label>Tasa EUR (Bs.):</label>
+                <input type="text" name="tasa_eur" value="{{ '%.2f'|format(session.get('tasa_eur', 0.0)) }}">
+                <button type="submit" name="accion" value="manual" class="btn-guardar">Aplicar Tasa</button>
+                <button type="submit" name="accion" value="api" class="btn-api">🌐 Consultar API</button>
+            </form>
+        </div>
+    </div>
+    <div class="main-content">
+        <h1>Bienvenido al Sistema ERP RSV</h1>
+        <p>Selecciona un módulo en la barra lateral para comenzar a operar.</p>
+    </div>
+</body>
+</html>

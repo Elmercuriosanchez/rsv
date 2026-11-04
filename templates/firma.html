@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+    <html lang="es" data-theme="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Firmar presupuesto #{{ budget['id'] }}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --bg-main: #0a0a0a;
+                --bg-card: rgba(26, 26, 26, 0.9);
+                --border-color: rgba(85, 85, 85, 0.35);
+                --text-main: #f5f5f5;
+                --text-muted: #a0a0a0;
+                --accent: #00e000;
+                --accent-2: #00a800;
+                --accent-gradient: linear-gradient(135deg, #00e000 0%, #00a800 100%);
+            }
+            body {
+                background: radial-gradient(ellipse at top, #141414 0%, #080808 55%, #000 100%);
+                background-attachment: fixed;
+                color: var(--text-main);
+                font-family: 'Inter', sans-serif;
+                margin: 0;
+                padding: 20px;
+                min-height: 100vh;
+            }
+            .wrap {
+                max-width: 700px;
+                margin: 0 auto;
+            }
+            .card {
+                background: var(--bg-card);
+                backdrop-filter: blur(12px);
+                border: 1px solid var(--border-color);
+                border-radius: 16px;
+                padding: 24px;
+                margin-bottom: 20px;
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            }
+            h1 {
+                margin: 0 0 12px;
+                font-size: 22px;
+                font-weight: 800;
+                background: var(--accent-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            canvas {
+                border: 2px dashed var(--border-color);
+                border-radius: 12px;
+                background: white;
+                cursor: crosshair;
+                touch-action: none;
+                width: 100%;
+                max-width: 600px;
+                height: 200px;
+            }
+            .btn {
+                padding: 12px 22px;
+                border: none;
+                border-radius: 10px;
+                font-weight: 700;
+                cursor: pointer;
+                font-size: 14px;
+                text-decoration: none;
+                display: inline-block;
+                font-family: inherit;
+                transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            }
+            .btn:hover {
+                transform: translateY(-2px);
+            }
+            .btn-primary {
+                background: var(--accent-gradient);
+                color: #001200;
+                box-shadow: 0 6px 20px rgba(0, 224, 0, 0.35);
+            }
+            .btn-secondary {
+                background: rgba(125, 125, 125, 0.15);
+                color: var(--text-main);
+                border: 1px solid var(--border-color);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="card">
+                <h1>✍️ Firma del cliente</h1>
+                <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">
+                    Presupuesto #{{ budget['id'] }} — {{ budget['client_name'] }} — Total: {{ "%.2f"|format(budget['total_foreign']) }} {{ budget['currency'] }}
+                </div>
+                <form method="POST" id="sig-form">
+                    <input type="hidden" name="signature_data" id="signature_data" value="">
+                    <canvas id="sig-canvas" width="600" height="200"></canvas>
+                    <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-secondary" onclick="clearSig()">🗑️ Limpiar</button>
+                        <button type="submit" class="btn btn-primary">💾 Guardar firma y aprobar</button>
+                        <a href="{{ url_for('index', module='📂 Historial') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+            const canvas = document.getElementById('sig-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            let drawing = false, hasContent = false;
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+                return { x: x * (canvas.width / rect.width), y: y * (canvas.height / rect.height) };
+            }
+
+            function start(e) {
+                e.preventDefault();
+                drawing = true;
+                hasContent = true;
+                const p = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+            }
+
+            function draw(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                const p = getPos(e);
+                ctx.lineTo(p.x, p.y);
+                ctx.stroke();
+            }
+
+            function end() {
+                drawing = false;
+            }
+
+            canvas.addEventListener('mousedown', start);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', end);
+            canvas.addEventListener('mouseleave', end);
+            canvas.addEventListener('touchstart', start, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', end);
+
+            window.clearSig = function() {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                hasContent = false;
+            };
+
+            document.getElementById('sig-form').addEventListener('submit', function(e) {
+                if (!hasContent) {
+                    e.preventDefault();
+                    alert('Debe firmar antes de guardar.');
+                    return;
+                }
+                document.getElementById('signature_data').value = canvas.toDataURL('image/png');
+            });
+        </script>
+    </body>
+    </html>

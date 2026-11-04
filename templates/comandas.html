@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>📋 Comandas de Faltantes</h2>
+<div class="card">
+    <table class="table-responsive">
+        <thead>
+            <tr>
+                <th>Comanda #</th>
+                <th>Presupuesto #</th>
+                <th>Cliente</th>
+                <th>Faltantes</th>
+                <th>Estatus</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in comandas %}
+            <tr>
+                <td><b>{{ data.comanda.id }}</b></td>
+                <td>{{ data.comanda.budget_id }}</td>
+                <td>{{ data.comanda.client_name }}</td>
+                <td>
+                    <ul>
+                    {% for item in data.items %}
+                        <li>{{ item.qty }} x {{ item.name }} ({{ item.inv_code }})</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+                <td><span class="badge badge-pending">{{ data.comanda.status }}</span></td>
+                <td>
+                    <!-- Aquí vinculamos con Compras -->
+                    <button onclick="generarCompra({{ data.comanda.id }})" class="btn btn-warning">
+                        🛒 Generar Compra
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+    <html lang="es" data-theme="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pagos - Presupuesto #{{ budget['id'] }}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --bg-main: #0a0a0a;
+                --bg-card: rgba(26, 26, 26, 0.9);
+                --border-color: rgba(85, 85, 85, 0.35);
+                --text-main: #f5f5f5;
+                --text-muted: #a0a0a0;
+                --accent: #00e000;
+                --accent-2: #00a800;
+                --accent-gradient: linear-gradient(135deg, #00e000 0%, #00a800 100%);
+                --danger: #ff3355;
+                --warning: #ffaa00;
+                --success: #00e000;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                background: radial-gradient(ellipse at top, #141414 0%, #080808 55%, #000 100%);
+                background-attachment: fixed;
+                color: var(--text-main);
+                font-family: 'Inter', sans-serif;
+                margin: 0;
+                padding: 20px;
+                min-height: 100vh;
+            }
+            .wrap {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+            .card {
+                background: var(--bg-card);
+                backdrop-filter: blur(12px);
+                border: 1px solid var(--border-color);
+                border-radius: 16px;
+                padding: 24px;
+                margin-bottom: 20px;
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            }
+            h1 {
+                margin: 0 0 8px;
+                font-size: 22px;
+                font-weight: 800;
+                background: var(--accent-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            h3 {
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 10px;
+                margin-top: 0;
+                font-size: 15px;
+                font-weight: 700;
+            }
+            label {
+                display: block;
+                font-size: 11.5px;
+                font-weight: 600;
+                letter-spacing: 0.03em;
+                color: var(--text-muted);
+                margin-bottom: 6px;
+            }
+            input, select, textarea {
+                width: 100%;
+                padding: 10px 14px;
+                margin: 4px 0 14px 0;
+                border-radius: 10px;
+                border: 1px solid var(--border-color);
+                background: rgba(20, 20, 20, 0.65);
+                color: var(--text-main);
+                font-size: 13px;
+                font-family: inherit;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+            input:focus, select:focus, textarea:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(0, 224, 0, 0.12);
+            }
+            button, .btn {
+                padding: 10px 16px;
+                border: none;
+                border-radius: 10px;
+                font-weight: 700;
+                cursor: pointer;
+                font-size: 13px;
+                text-decoration: none;
+                display: inline-block;
+                font-family: inherit;
+                background: var(--accent-gradient);
+                color: #001200;
+                box-shadow: 0 4px 14px rgba(0, 224, 0, 0.25);
+                transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.2s ease;
+            }
+            button:hover, .btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 8px 20px rgba(0, 224, 0, 0.35);
+                filter: brightness(1.05);
+            }
+            .btn-primary {
+                background: var(--accent-gradient);
+                color: #001200;
+            }
+            .btn-secondary {
+                background: rgba(125, 125, 125, 0.15);
+                color: var(--text-main);
+                border: 1px solid var(--border-color);
+                box-shadow: none;
+            }
+            .btn-secondary:hover {
+                background: rgba(125, 125, 125, 0.25);
+                border-color: rgba(0, 224, 0, 0.3);
+                transform: none;
+                box-shadow: none;
+            }
+            .btn-danger {
+                background: rgba(255, 51, 85, 0.15);
+                color: #ff8a9e;
+                border: 1px solid rgba(255, 51, 85, 0.35);
+                box-shadow: none;
+            }
+            .btn-danger:hover {
+                background: rgba(255, 51, 85, 0.25);
+                transform: none;
+                box-shadow: none;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+            th, td {
+                padding: 10px 12px;
+                border-bottom: 1px solid var(--border-color);
+                text-align: left;
+            }
+            th {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                font-weight: 700;
+                color: var(--accent);
+            }
+            .flex-row {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .flex-col {
+                flex: 1;
+                min-width: 180px;
+            }
+            .stat {
+                background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(20, 20, 20, 0.95));
+                border-radius: 12px;
+                padding: 16px;
+                flex: 1;
+                min-width: 150px;
+                border: 1px solid var(--border-color);
+                position: relative;
+                overflow: hidden;
+            }
+            .stat::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -50%;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle, rgba(0, 224, 0, 0.08) 0%, transparent 70%);
+                pointer-events: none;
+            }
+            .stat .num {
+                font-size: 22px;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+                background: var(--accent-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-top: 4px;
+            }
+            .remaining {
+                color: var(--danger);
+            }
+            .paid {
+                color: var(--success);
+            }
+            @media (max-width: 600px) {
+                body { padding: 10px; }
+                .card { padding: 16px; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="card">
+                <h1>💵 Pagos del presupuesto #{{ budget['id'] }}</h1>
+                <div style="font-size: 13px; color: var(--text-muted);">
+                    {{ budget['client_name'] }} — {{ budget['vehicle_name'] or '-' }} {{ budget['vehicle_plate'] or '' }}
+                </div>
+                <a href="{{ url_for('index', module='📂 Historial') }}" class="btn btn-secondary" style="margin-top: 12px;">← Volver al historial</a>
+            </div>
+
+            <div class="card">
+                <div class="flex-row">
+                    <div class="stat">
+                        <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">TOTAL</div>
+                        <div class="num">{{ "%.2f"|format(budget['total_foreign']) }} {{ budget['currency'] }}</div>
+                    </div>
+                    <div class="stat">
+                        <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">ABONADO</div>
+                        <div class="num paid">{{ "%.2f"|format(total_paid) }} {{ budget['currency'] }}</div>
+                    </div>
+                    <div class="stat">
+                        <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">SALDO</div>
+                        <div class="num {% if remaining > 0.01 %}remaining{% else %}paid{% endif %}">{{ "%.2f"|format(remaining) }} {{ budget['currency'] }}</div>
+                    </div>
+                    <div class="stat">
+                        <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">ESTADO</div>
+                        <div class="num">{{ payment_status }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>➕ Registrar nuevo abono</h3>
+                <form method="POST" action="{{ url_for('budget_payments', budget_id=budget['id']) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="flex-row">
+                        <div class="flex-col">
+                            <label>Monto *</label>
+                            <input type="number" step="0.01" min="0.01" name="amount" required value="{{ '%.2f'|format(remaining) if remaining > 0 else '' }}">
+                        </div>
+                        <div class="flex-col">
+                            <label>Moneda</label>
+                            <select name="currency">
+                                <option value="USD" {% if budget['currency'] == 'USD' %}selected{% endif %}>USD ($)</option>
+                                <option value="EUR" {% if budget['currency'] == 'EUR' %}selected{% endif %}>EUR (€)</option>
+                                <option value="VES">Bolívares (Bs)</option>
+                            </select>
+                        </div>
+                        <div class="flex-col">
+                            <label>Método de pago *</label>
+                            <select name="method" required>
+                                {% for m in PAYMENT_METHODS %}
+                                    <option value="{{ m }}">{{ m }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col">
+                            <label>Referencia / Comprobante</label>
+                            <input type="text" name="reference" placeholder="p.ej. últimos 4 dígitos, # operación">
+                        </div>
+                        <div class="flex-col">
+                            <label>Nota</label>
+                            <input type="text" name="note" placeholder="opcional">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">💾 Registrar abono</button>
+                </form>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 12px;">
+                    <strong>Nota:</strong> Si paga en <strong>Bolívares (Bs)</strong>, el monto se acredita usando la <strong>tasa BCV del día del pago</strong> (USD {{ "%.2f"|format(tasa_usd) }} / EUR {{ "%.2f"|format(tasa_eur) }}), no la tasa del presupuesto. Si paga en una divisa distinta a {{ budget['currency'] }}, se aplica el cross-rate BCV del día.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Historial de abonos ({{ payments|length }})</h3>
+                {% if payments %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Monto original</th>
+                                <th>Acreditado</th>
+                                <th>Método</th>
+                                <th>Ref</th>
+                                <th>Usuario</th>
+                                <th>Nota</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in payments %}
+                                {% set orig_amt = p['original_amount'] if 'original_amount' in p.keys() and p['original_amount'] else p['amount_ves'] %}
+                                <tr>
+                                    <td>{{ p['date'] }}</td>
+                                    <td>
+                                        {% if p['currency'] == budget['currency'] %}
+                                            {{ "%.2f"|format(p['amount_foreign']) }} {{ budget['currency'] }}
+                                        {% else %}
+                                            {{ "%.2f"|format(orig_amt) }} {{ p['currency'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if p['currency'] == budget['currency'] %}
+                                            —
+                                        {% else %}
+                                            {{ "%.2f"|format(p['amount_foreign']) }} {{ budget['currency'] }}
+                                            <span style="color: var(--text-muted); font-size: 11px;">(@ {{ "%.2f"|format(p['rate_bcv']) }})</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ p['method'] }}</td>
+                                    <td>{{ p['reference'] or '-' }}</td>
+                                    <td>{{ p['username'] }}</td>
+                                    <td>{{ p['note'] or '-' }}</td>
+                                    <td>
+                                        <form action="{{ url_for('delete_payment', payment_id=p['id']) }}" method="POST" style="margin: 0;" onsubmit="return confirm('¿Eliminar este abono?')">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn-danger" style="padding: 4px 8px; font-size: 11px;">🗑️</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p style="color: var(--text-muted); font-size: 13px;">Aún no hay abonos registrados para este presupuesto.</p>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+    </html>
